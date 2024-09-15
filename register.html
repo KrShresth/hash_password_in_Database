@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333333;
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555555;
+        }
+
+        #message {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <table>
+                <tr>
+                    <td><label for="username">Username:</label></td>
+                    <td><input type="text" id="username" name="username" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" id="email" name="email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="mobile">Mobile:</label></td>
+                    <td><input type="text" id="mobile" name="mobile" required></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" id="password" name="password" required></td>
+                </tr>
+                <tr>
+                    <td><label for="confirmPassword">Confirm Password:</label></td>
+                    <td><input type="password" id="confirmPassword" name="confirmPassword" required></td>
+                </tr>
+            </table>
+            <button type="submit">Register</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Check password rules
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                document.getElementById('message').textContent = 'Password must contain at least one uppercase letter, one lowercase letter, one symbol, and one number.';
+                return;
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                document.getElementById('message').textContent = 'Passwords do not match!';
+                return;
+            }
+
+            // Validate mobile number
+            const mobileRegex = /^\d{10}$/;
+            if (!mobileRegex.test(mobile)) {
+                document.getElementById('message').textContent = 'Mobile number must be 10 digits.';
+                return;
+            }
+
+            // Validate email
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('message').textContent = 'Email must be a Gmail address.';
+                return;
+            }
+
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, mobile, password })
+            });
+            const data = await response.json();
+            document.getElementById('message').textContent = data.message;
+
+            if (data.message === 'Registration successful!') {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

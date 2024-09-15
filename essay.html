@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essay on Mountains</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #290a37;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .content-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #00796b;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        #token {
+            display: block;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #1f1238;
+            border: 1px solid #004d40;
+            border-radius: 5px;
+            word-wrap: break-word;
+            color: #ffffff;
+            white-space: pre-wrap; /* Ensures line breaks are preserved */
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <h2>IIIT KOTTAYAM 2022BCY0057</h2>
+        <p>HEY!!!!! I'm Shresth Raj<br>
+            welcome you have successfully logged in<br>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo, voluptatem inventore possimus fugiat dicta voluptatum quisquam ipsum molestiae iusto, esse tempora quos natus. Quasi voluptatum, quos omnis modi ex reiciendis!.</p>
+        <!-- <p>Your JWT Token: <span id="token"></span></p> -->
+    </div>
+
+    <script>
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
+
+        const token = getCookie('token');
+        if (token) {
+            const payload = parseJwt(token);
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (currentTime > payload.exp) {
+                // Clear expired token
+                document.cookie = 'token=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+                alert('Session expired. Please log in again.');
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('token').textContent = token;
+            }
+        } else {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
