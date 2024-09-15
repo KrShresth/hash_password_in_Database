@@ -19,7 +19,7 @@ async function initializeDatabase() {
         db = await mysql.createConnection({
             host: 'localhost',
             user: 'root',
-            password: 'shresth@0545',
+            password: '*********',
             database: 'learning_platform'
         });
         console.log('MySQL Database connected successfully.');
